@@ -14,15 +14,13 @@
 // TODO: Implement this function to return a vector of strings
 // containing the names of everyone on your team.
 std::vector<std::string> GetTeamMembers() {
-  std::vector<std::string> team ("Miguel-Angel Gonzalez", "Bryan De La Cruz");
-  return team;
+  return {"Miguel-Angel Gonzalez", "Bryan De La Cruz"};
 }
 
 // TODO: Implement this function to return a string that describes
 // the strategy your logic uses to bid (e.g., "We bid high early on").
 std::string GetStrategy() {
-  std::string <int> numbers = {0, 0, 0, 0, 25, 25, 0, 0, 50, 75};
-  return "";
+  return "We bid evenly each round using an equal-distribution strategy.";
 }
 
 // TODO: Implement the bidding logic.
@@ -42,10 +40,23 @@ std::string GetStrategy() {
 //   - Bids must be non-negative integers.
 void GenerateBids(int rounds, int budget, std::string output_filename) {
   std::ofstream outfile(output_filename);
-  int bid_per_round = budget / rounds;
-  for (int i{0}; i < rounds; i++) {
-    outfile << bid_per_round << "\n";
+  if (rounds <= 0) {
+    return;
   }
+
+  int bid_per_round = budget / rounds;
+  int leftover = budget % rounds;
+
+  for (int i = 0; i < rounds; i++) {
+    int bid = bid_per_round;
+    if (leftover > 0) {
+      bid += 1;
+      leftover--;
+    }
+    std::ofstream out{output_filename};
+    outfile << bid << "\n";
+  }
+  outfile.close();
 }
 
 // ============================================================================
@@ -54,10 +65,9 @@ void GenerateBids(int rounds, int budget, std::string output_filename) {
 // This function will be ignored by the "make test" command.
 // ============================================================================
 int main() {
-  GenerateBids(0, 75, "test_output.txt");
-  // You can write code here to call your functions and see if they work.
-  // Example:
-  // GenerateBids(10, 100, "test_output.txt");
-  
+  int rounds{10};
+  int budget{50};
+  GenerateBids(rounds, budget, "test_output.txt");  
+  std::ifstream input("test_output.txt");
   return 0;
 }
